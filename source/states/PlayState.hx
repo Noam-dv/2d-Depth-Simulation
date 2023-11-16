@@ -1,5 +1,6 @@
 package states;
 
+import util.*;
 import backend.*;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -26,6 +27,20 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		if (FlxG.mouse.justPressed) {
+            if (FlxG.mouse.x >= byte.x && FlxG.mouse.x <= byte.x + byte.width &&
+                FlxG.mouse.y >= byte.y && FlxG.mouse.y <= byte.y + byte.height) {
+
+                var mouseXDir:Float = FlxG.mouse.x - byte.x;
+                var mouseYDir:Float = FlxG.mouse.y - byte.y;
+
+                var length:Float = Math.sqrt(mouseXDir * mouseXDir + mouseYDir * mouseYDir);
+                mouseXDir /= length;
+                mouseYDir /= length;
+                byte.addForce(-mouseXDir * someForceValue, -mouseYDir * someForceValue);
+            }
+        }
 	}
 }
 
@@ -51,6 +66,13 @@ class Byte extends FlxTypedGroup<NSprite>
 	var accelerationX:Float = 0;
 	var accelerationY:Float = 0;
 	var damping:Float = 0.9; //damping factor for smoothness
+
+	public var x:Float;
+	public var y:Float;
+	public var z:Float;
+	public var width:Float;
+	public var height:Float;
+
 	public function addForce(fx:Float, fy:Float) {
         accelerationX += fx;
         accelerationY += fy;
@@ -76,6 +98,14 @@ class Byte extends FlxTypedGroup<NSprite>
 		{
 			byte.x += xSpeed;
 		});
+
+		x = mouth.x;
+		y = mouth.y;
+		z = 0;
+
+		width = mouth.frameWidth;
+		height = mouth.frameWidth;
+
     }
 
 	public function new()
@@ -89,14 +119,17 @@ class Byte extends FlxTypedGroup<NSprite>
 		mouth.frames = Paths.graphic("BYTE", SparrowV2);
 		mouth.addAnim("mouth", "boc", 24, true);
 		mouth.play("mouth", true);
+		mouth.z = 2;
 
 		chest.frames = Paths.graphic("BYTE", SparrowV2);
 		chest.addAnim("mouth", "BOX", 24, true);
 		chest.play("mouth", true);
+		chest.z = 1;
 
 		legs.frames = Paths.graphic("BYTE", SparrowV2);
 		legs.addAnim("mouth", "legs", 24, true);
 		legs.play("mouth", true);
+		legs.z = 0;
 
 		add(mouth);
 		add(legs);
@@ -127,7 +160,13 @@ class Byte extends FlxTypedGroup<NSprite>
 
 
 		handleForce();
+		layerByZ();
 	}
+
+	public function layerByZ(){
+		this.sort(Util.byZ, FlxSort.ASCENDING); // sort 3d layering
+	}
+	
 	public function handleForce(){
 		velocityX += accelerationX;
         velocityY += accelerationY;

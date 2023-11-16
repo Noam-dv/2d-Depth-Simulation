@@ -10,7 +10,7 @@ import flixel.math.FlxPoint;
 class NSprite extends FlxSprite implements gfx.interfaces.InGFXobj
 {
     static public final OFS:Float = 0.7333333;
-
+    public var z:Float = 0;
 
 
     public var _offsetScale(default, set):FlxPoint = null;
