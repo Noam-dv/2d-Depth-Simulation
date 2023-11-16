@@ -6,7 +6,6 @@ import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMatrix;
 import gfx.*;
-import shaders.ColorSwap;
 import shaders.FlxRuntimeShader;
 import shaders.Shaders;
 
