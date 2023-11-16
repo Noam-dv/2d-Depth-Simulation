@@ -4,6 +4,8 @@ import flixel.FlxSprite;
 import flash.display.BitmapData;
 import flixel.graphics.*;
 
+import flixel.math.FlxPoint;
+
 class NSprite extends FlxSprite implements gfx.interfaces.InGFXobj
 {
     static public final OFS:Float = 0.7333333;
