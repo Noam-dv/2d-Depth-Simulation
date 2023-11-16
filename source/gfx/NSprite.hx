@@ -3,6 +3,12 @@ package gfx;
 import flixel.FlxSprite;
 
 class NSprite extends FlxSprite {
+    final static public var OFS:Float = 0.7333333;
+    public var _offsetScale(default, set):FlxPoint = null;
+    public function set__offsetScale(v:FlxPoint) {
+        v.x= v.x*OFS;
+        return null;
+    }
     public dynamic function preUpdate(elapsed:Float) {}
     public dynamic function postUpdate(elapsed:Float) {}
     override function update(elapsed:Float) {
