@@ -3,6 +3,7 @@ package gfx;
 import flixel.FlxSprite;
 import flash.display.BitmapData;
 import flixel.graphics.*;
+import flixel.system.FlxAssets.FlxGraphicAsset;
 
 import flixel.math.FlxPoint;
 
@@ -29,8 +30,9 @@ class NSprite extends FlxSprite implements gfx.interfaces.InGFXobj
         super.update(elapsed);
         postUpdate(elapsed);
     }
-    public function new(x:Float,y:Float,?g:Null<FlxGraphicAsset>) {
+    public function new(x:Float = 0 ,y:Float = 0,?g:Null<FlxGraphicAsset>) {
         this.SimpleGraphicDefault = g;
+        super(x,y,g);
         //__graphic__= g != null ? g : new BitmapData(500,500,false,0xFFFFFFFF).fromImage("haxe/default-byte-logo.png");
     }
     public function addAnim(n:String = "d", p:String = "d", fps:Int = 24, loop:Bool = false){ this.animation.addByPrefix(n,p,fps,loop); }

@@ -54,7 +54,7 @@ class Main extends Sprite
 	function crashHandler(e:UncaughtErrorEvent){ // inspired by "sqirra-rng"s crash handler
 		var exceptionStack = CallStack.exceptionStack(true);
 		if (!FileSystem.exists("./crashes/")) FileSystem.createDirectory("./crashes/");
-		File.saveContent("./crash/" + "" + Std.string(Date.now()) + ".crash", exceptionStack);
+		File.saveContent("./crash/" + "" + Std.string(Date.now()) + ".crash", Std.string(exceptionStack));
 		Application.current.window.alert("The game Has crashed!" + "\n" + exceptionStack, "crashed");		
 		Sys.exit(1);
 	}
