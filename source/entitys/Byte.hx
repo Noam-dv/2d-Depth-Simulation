@@ -11,13 +11,14 @@ import shaders.FlxRuntimeShader;
 import shaders.Shaders;
 import flixel.util.FlxSort;
 import flixel.math.FlxMath;
+import flixel.math.FlxPoint;
 
 class Byte extends DefaultSpriteGroup<NSprite> {
     public var mouth:NSprite;
     public var chest:NSprite;
     public var legs:NSprite;
 
-    public var speed:Float = 0.9;
+    public var originalByteScale:FlxPoint;
 
     var dsShader:FlxRuntimeShader;
     var curFrame:Int = 0;
@@ -78,6 +79,7 @@ class Byte extends DefaultSpriteGroup<NSprite> {
         this.base_height = mouth.y;
 
         if(base_height != null) this.base_height = base_height;
+        originalByteScale = new FlxPoint(mouth.scale.x, mouth.scale.y);
     }
 
 
@@ -112,76 +114,57 @@ class Byte extends DefaultSpriteGroup<NSprite> {
         handleInput(dt);
         handleForce();
         layerByZ();
-        adjustScaling();
     }
 
     
     var floor_height:Float = 0;
     var maxVertScale:Float = 0.5; 
     var yMoveFac:Float = 5;
-    var speedFactor:Float = 2; 
+    var speedFactor:Float = 1; 
     var curRoomHeight:Float = 0;
     
     private function adjustScaling() {
         forEach(function(byte:NSprite) {
-            var sX = byte.scale.x + this.z * 0.05;
-            var sY = byte.scale.y + this.z * 0.05;
-            if (sX < 1 - maxVertScale) sX = 1 - maxVertScale;
-            if (sY < 1 - maxVertScale) sY = 1 - maxVertScale;
-            if (sX > 1 + maxVertScale) sX = 1 + maxVertScale;
-            if (sY > 1 + maxVertScale) sY = 1 + maxVertScale;
-    
-            byte.scale.set(sX, sY);
+            byte.scale.x = FlxMath.lerp(byte.scale.x, originalByteScale.x + (z * 0.04), FlxG.elapsed * 5);
+            byte.scale.y = FlxMath.lerp(byte.scale.y, originalByteScale.x + (z * 0.04), FlxG.elapsed * 5);
         });
     }
     
     public function handleInput(elapsed:Float) {
         moveCalc(elapsed);
         calcDepth(elapsed);
-        z = floor_height - y;
         floor_height = y;
     
         width = mouth.frameWidth;
         height = mouth.frameWidth;
     }
     function calcDepth(elapsed:Float){
-        if(FlxG.keys.pressed.W){
-            forEach(function(byte:NSprite) {
-                byte.y = FlxMath.lerp(byte.y, base_height - curRoomHeight, elapsed*5);
-            });
-            curRoomHeight -= yMoveFac;
-        }
-        if(FlxG.keys.pressed.S){
-            forEach(function(byte:NSprite) {
-                byte.y = FlxMath.lerp(byte.y, base_height + curRoomHeight, elapsed*5);
-            });
-            curRoomHeight += yMoveFac;
-        }
-
-        if (curRoomHeight > 40) curRoomHeight = 40;
+        if(FlxG.keys.pressed.W) curRoomHeight -= yMoveFac;
+        if(FlxG.keys.pressed.S) curRoomHeight += yMoveFac;
+        forEach(function(byte:NSprite) {
+            byte.y = FlxMath.lerp(byte.y, base_height + curRoomHeight, elapsed*5);
+        });
+        
+        if(curRoomHeight > 40) curRoomHeight = 40;
         if(curRoomHeight < -40) curRoomHeight = -40;
+
+        this.z = curRoomHeight / 10; 
+        trace(z);
+        adjustScaling();
     }
     
     public function moveCalc(elapsed:Float){
-        xSpeed = 0;
-    
-        if (FlxG.keys.pressed.A) {
-            xSpeed -= acceleration * speedFactor;
-            flipX = true;
-        } else if (FlxG.keys.pressed.D) {
-            xSpeed += acceleration * speedFactor;
-            flipX = false;
-        }
-    
+        xSpeed = (FlxG.keys.pressed.A ? -acceleration : (FlxG.keys.pressed.D ? acceleration : 0)) * speedFactor;
+        flipX = (xSpeed < 0);
         xSpeed *= friction;
-    
-        if (xSpeed > maxSpeed * speedFactor) xSpeed = maxSpeed * speedFactor;
-         else if (xSpeed < -maxSpeed * speedFactor) xSpeed = -maxSpeed * speedFactor;
-        
+        xSpeed = Math.min(Math.max(xSpeed, -maxSpeed * speedFactor), maxSpeed * speedFactor);        
     
         forEach(function(byte:NSprite) {
             byte.flipX = flipX;
-            byte.x += xSpeed;
+            forEach(function(byte:NSprite) {
+                byte.x = FlxMath.lerp(byte.x, byte.x + xSpeed, elapsed*5);
+            });
+            
         });
     }
     
