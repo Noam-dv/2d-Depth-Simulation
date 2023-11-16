@@ -10,6 +10,7 @@ import gfx.*;
 import shaders.FlxRuntimeShader;
 import shaders.Shaders;
 import flixel.util.FlxSort;
+import flixel.math.FlxMath;
 
 class Byte extends DefaultSpriteGroup<NSprite> {
     public var mouth:NSprite;
@@ -32,12 +33,14 @@ class Byte extends DefaultSpriteGroup<NSprite> {
     var accelerationY:Float = 0;
     var damping:Float = 0.6;
 
+
+    public var base_height:Float;
     public function addForce(fx:Float, fy:Float) {
         accelerationX += fx;
         accelerationY += fy;
     }
 
-    public function new() {
+    public function new(?base_height:Null<Float>) {
         super();
 
         mouth = new NSprite();
@@ -72,6 +75,9 @@ class Byte extends DefaultSpriteGroup<NSprite> {
         dsShader.setFloat("ry", 0.05);
 
         mouth.shader = dsShader;
+        this.base_height = mouth.y;
+
+        if(base_height != null) this.base_height = base_height;
     }
 
 
@@ -103,7 +109,7 @@ class Byte extends DefaultSpriteGroup<NSprite> {
             dsShader.setFloat("ry", FlxG.random.float(0.0045, 0.095));
             dsShader.setFloat("iTime", dt);
         }
-        handleInput();
+        handleInput(dt);
         handleForce();
         layerByZ();
         adjustScaling();
@@ -111,63 +117,72 @@ class Byte extends DefaultSpriteGroup<NSprite> {
 
     
     var floor_height:Float = 0;
-    var maxVertScale:Float =2;
-    var verticalMoveFactor:Float = 2;
-
+    var maxVertScale:Float = 0.5; 
+    var yMoveFac:Float = 5;
+    var speedFactor:Float = 2; 
+    var curRoomHeight:Float = 0;
+    
     private function adjustScaling() {
         forEach(function(byte:NSprite) {
-            var sX = byte.scale.x + this.z * 0.1;
-            var sY = byte.scale.y + this.z * 0.1;
+            var sX = byte.scale.x + this.z * 0.05;
+            var sY = byte.scale.y + this.z * 0.05;
             if (sX < 1 - maxVertScale) sX = 1 - maxVertScale;
             if (sY < 1 - maxVertScale) sY = 1 - maxVertScale;
             if (sX > 1 + maxVertScale) sX = 1 + maxVertScale;
             if (sY > 1 + maxVertScale) sY = 1 + maxVertScale;
-
+    
             byte.scale.set(sX, sY);
         });
     }
-
-    public function handleInput() {
-
-        moveCalc();
-
-        var previous_y = y;
-
-        var verticalMove:Float = ((FlxG.keys.pressed.W) ? -verticalMoveFactor :(FlxG.keys.pressed.S) ? verticalMoveFactor :0);
-        var nY = previous_y + verticalMove;
-
-        if (nY > 0) nY = 0;
-        if (nY < -maxVertScale) nY = -maxVertScale;
-
-        y = nY;
+    
+    public function handleInput(elapsed:Float) {
+        moveCalc(elapsed);
+        calcDepth(elapsed);
         z = floor_height - y;
         floor_height = y;
-
+    
         width = mouth.frameWidth;
         height = mouth.frameWidth;
     }
-    public function moveCalc(){
-        xSpeed = 0;
+    function calcDepth(elapsed:Float){
+        if(FlxG.keys.pressed.W){
+            forEach(function(byte:NSprite) {
+                byte.y = FlxMath.lerp(byte.y, base_height - curRoomHeight, elapsed*5);
+            });
+            curRoomHeight -= yMoveFac;
+        }
+        if(FlxG.keys.pressed.S){
+            forEach(function(byte:NSprite) {
+                byte.y = FlxMath.lerp(byte.y, base_height + curRoomHeight, elapsed*5);
+            });
+            curRoomHeight += yMoveFac;
+        }
 
+        if (curRoomHeight > 40) curRoomHeight = 40;
+        if(curRoomHeight < -40) curRoomHeight = -40;
+    }
+    
+    public function moveCalc(elapsed:Float){
+        xSpeed = 0;
+    
         if (FlxG.keys.pressed.A) {
-            xSpeed -= acceleration;
+            xSpeed -= acceleration * speedFactor;
             flipX = true;
         } else if (FlxG.keys.pressed.D) {
-            xSpeed += acceleration;
+            xSpeed += acceleration * speedFactor;
             flipX = false;
         }
-
+    
         xSpeed *= friction;
-
-        if (xSpeed > maxSpeed) {
-            xSpeed = maxSpeed;
-        } else if (xSpeed < -maxSpeed) {
-            xSpeed = -maxSpeed;
-        }
+    
+        if (xSpeed > maxSpeed * speedFactor) xSpeed = maxSpeed * speedFactor;
+         else if (xSpeed < -maxSpeed * speedFactor) xSpeed = -maxSpeed * speedFactor;
         
+    
         forEach(function(byte:NSprite) {
             byte.flipX = flipX;
             byte.x += xSpeed;
         });
     }
+    
 }
