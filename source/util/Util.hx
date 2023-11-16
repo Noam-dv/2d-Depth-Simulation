@@ -1,10 +1,10 @@
-package;
+package util;
 
 import flixel.util.FlxSave;
 
 import openfl.utils.Assets;
 import lime.utils.Assets as LimeAssets;
-
+import gfx.*;
 #if sys
 import sys.io.File;
 import sys.FileSystem;
@@ -28,7 +28,7 @@ class Util
 		cam.bgColor = bgcolor;
 		cam.bgColor.alpha = bgcoloralpha;
 	}
-	public static inline function byZ(Order:Int, Obj1:FlxZSprite, Obj2:FlxZSprite):Int {
+	public static inline function byZ(Order:Int, Obj1:NSprite, Obj2:NSprite):Int {
 		return FlxSort.byValues(Order, Obj1.z, Obj2.z);
 	}
 }

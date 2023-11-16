@@ -9,6 +9,7 @@ import flixel.math.FlxMatrix;
 import gfx.*;
 import shaders.FlxRuntimeShader;
 import shaders.Shaders;
+import flixel.util.FlxSort;
 
 class PlayState extends FlxState
 {
@@ -38,7 +39,7 @@ class PlayState extends FlxState
                 var length:Float = Math.sqrt(mouseXDir * mouseXDir + mouseYDir * mouseYDir);
                 mouseXDir /= length;
                 mouseYDir /= length;
-                byte.addForce(-mouseXDir * someForceValue, -mouseYDir * someForceValue);
+                byte.addForce(-mouseXDir * 1, -mouseYDir * 1);
             }
         }
 	}
