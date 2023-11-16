@@ -24,8 +24,8 @@ import sys.io.Process;
 class Main extends Sprite
 {
 	var winPrefs = {
-		w: 1280,
-		h: 1280,
+		w: 1024 ,
+		h: 768 ,
 		fps: 240,
 		state: states.PlayState,
 		save_prefix: 0,
