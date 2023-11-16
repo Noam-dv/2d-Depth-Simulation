@@ -41,7 +41,7 @@ class Byte extends FlxTypedGroup<NSprite>
 	var curFrame:Int = 0;
 
 	var xSpeed:Float = 0;
-    var acceleration:Float = 7;
+    var acceleration:Float = 4;
     var friction:Float = 0.9;
     var maxSpeed:Float = 60;
 
