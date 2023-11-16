@@ -32,13 +32,6 @@ class Byte extends DefaultSpriteGroup<NSprite> {
     var accelerationY:Float = 0;
     var damping:Float = 0.6;
 
-    public var x:Float;
-    public var y:Float;
-    public var z:Float;
-    public var width:Float;
-    public var height:Float;
-    public var flipX:Bool;
-
     public function addForce(fx:Float, fy:Float) {
         accelerationX += fx;
         accelerationY += fy;
@@ -117,8 +110,7 @@ class Byte extends DefaultSpriteGroup<NSprite> {
 
     private function adjustScaling() {
         forEach(function(byte:NSprite) {
-            var scaleRatio:Float = 1.0 + byte.z * 0.1;
-            byte.scale.set(scaleRatio, scaleRatio);
+            byte.scale.set(byte.scale.x + this.z * 0.1, byte.scale.y + this.z * 0.1);
         });
     }
     
@@ -127,7 +119,7 @@ class Byte extends DefaultSpriteGroup<NSprite> {
 
     public function handleInput() {
         xSpeed = 0;
-        var verticalMoveFactor:Float = 0.1;
+        var verticalMoveFactor:Float = 1;
 
         if (FlxG.keys.pressed.A) {
             xSpeed -= acceleration;
