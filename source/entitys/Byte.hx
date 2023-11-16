@@ -74,19 +74,6 @@ class Byte extends DefaultSpriteGroup<NSprite> {
         mouth.shader = dsShader;
     }
 
-    public override function update(dt:Float) {
-        super.update(dt);
-        curFrame++;
-        handleInput();
-        if (curFrame % 50 == 0) {
-            dsShader.setFloat("rx", FlxG.random.float(0.002, 0.02));
-            dsShader.setFloat("ry", FlxG.random.float(0.0045, 0.095));
-            dsShader.setFloat("iTime", dt);
-        }
-        handleForce();
-        layerByZ();
-        adjustScaling();
-    }
 
     public function layerByZ() {
         this.sort(Util.byZ, FlxSort.ASCENDING); // sort 3d layering
@@ -108,18 +95,59 @@ class Byte extends DefaultSpriteGroup<NSprite> {
         accelerationY = 0;
     }
 
+    public override function update(dt:Float) {
+        super.update(dt);
+        curFrame++;
+        if (curFrame % 50 == 0) {
+            dsShader.setFloat("rx", FlxG.random.float(0.002, 0.02));
+            dsShader.setFloat("ry", FlxG.random.float(0.0045, 0.095));
+            dsShader.setFloat("iTime", dt);
+        }
+        handleInput();
+        handleForce();
+        layerByZ();
+        adjustScaling();
+    }
+
+    
+    var floor_height:Float = 0;
+    var maxVertScale:Float =2;
+    var verticalMoveFactor:Float = 2;
+
     private function adjustScaling() {
         forEach(function(byte:NSprite) {
-            byte.scale.set(byte.scale.x + this.z * 0.1, byte.scale.y + this.z * 0.1);
+            var sX = byte.scale.x + this.z * 0.1;
+            var sY = byte.scale.y + this.z * 0.1;
+            if (sX < 1 - maxVertScale) sX = 1 - maxVertScale;
+            if (sY < 1 - maxVertScale) sY = 1 - maxVertScale;
+            if (sX > 1 + maxVertScale) sX = 1 + maxVertScale;
+            if (sY > 1 + maxVertScale) sY = 1 + maxVertScale;
+
+            byte.scale.set(sX, sY);
         });
     }
-    
-
-    var platformHeight:Float = 0; 
 
     public function handleInput() {
+
+        moveCalc();
+
+        var previous_y = y;
+
+        var verticalMove:Float = ((FlxG.keys.pressed.W) ? -verticalMoveFactor :(FlxG.keys.pressed.S) ? verticalMoveFactor :0);
+        var nY = previous_y + verticalMove;
+
+        if (nY > 0) nY = 0;
+        if (nY < -maxVertScale) nY = -maxVertScale;
+
+        y = nY;
+        z = floor_height - y;
+        floor_height = y;
+
+        width = mouth.frameWidth;
+        height = mouth.frameWidth;
+    }
+    public function moveCalc(){
         xSpeed = 0;
-        var verticalMoveFactor:Float = 1;
 
         if (FlxG.keys.pressed.A) {
             xSpeed -= acceleration;
@@ -136,19 +164,10 @@ class Byte extends DefaultSpriteGroup<NSprite> {
         } else if (xSpeed < -maxSpeed) {
             xSpeed = -maxSpeed;
         }
-        var prevY:Float = y; 
-
+        
         forEach(function(byte:NSprite) {
             byte.flipX = flipX;
             byte.x += xSpeed;
         });
-
-        y = prevY + ((FlxG.keys.pressed.W) ? -verticalMoveFactor : (FlxG.keys.pressed.S) ? verticalMoveFactor : 0);
-        z = platformHeight - y; 
-        platformHeight = y;
-
-        width = mouth.frameWidth;
-        height = mouth.frameWidth;
     }
-
 }
