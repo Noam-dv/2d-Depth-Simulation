@@ -16,7 +16,7 @@ class NSprite extends FlxSprite implements InGFXobj
     public dynamic function postUpdate(elapsed:Float) {}
 
     public var __graphic__(get,default):FlxGraphic;
-    public function get___graphic__(){ return this.SimpleGraphicDefault}
+    public function get___graphic__(){ return this.SimpleGraphicDefault; }
 
     public var SimpleGraphicDefault:FlxGraphicAsset;
     override function update(elapsed:Float) {
