@@ -1,39 +1,41 @@
 package states;
 
-import util.*;
 import backend.*;
+import entitys.*;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxMath;
 import flixel.math.FlxMatrix;
+import flixel.math.FlxPoint;
+import flixel.util.FlxSort;
 import gfx.*;
 import shaders.FlxRuntimeShader;
 import shaders.Shaders;
-import flixel.util.FlxSort;
-import entitys.*;
-import flixel.math.FlxPoint;
-import flixel.math.FlxMath;
-import flixel.FlxSprite;
+import util.*;
 
-class PlayState extends FlxState
+class PlayState extends NLevel
 {
 	public var byte:Byte;
+
 	private var playerFollow:FlxPoint;
+
 	override public function create()
 	{
 		super.create();
 
 		playerFollow = new FlxPoint();
 
-		var bg = new FlxSprite().loadGraphic(Paths.graphic("placeholders/bgtest1",Image));
-		bg.screenCenter();
-		bg.scale.set(0.65,0.65);
-		add(bg);
+		background = RoomUtil.background("placeholders/bgtest");
+		add(background);
 
 		byte = new Byte();
 		add(byte);
 
-		
+		forground = RoomUtil.forground("placeholders/bgtest");
+		add(forground);
+
 		FlxG.camera.bgColor = flixel.util.FlxColor.WHITE;
 	}
 
@@ -41,6 +43,7 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
+		FlxG.watch.addQuick("player.coords", [byte.mouth.x, byte.mouth.y]);
 		playerFollow.set(byte.chest.getGraphicMidpoint().x + byte.camOffset.x, byte.chest.getGraphicMidpoint().y);
 		FlxG.camera.scroll.x = FlxMath.lerp(FlxG.camera.scroll.x, playerFollow.x, elapsed * 7.5);
 	}
