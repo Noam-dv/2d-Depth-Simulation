@@ -20,13 +20,11 @@ class Paths {
 
             case AssetTypes.Image:
 
-                var sprite:FlxSprite = new FlxSprite();
-                sprite.loadGraphic(img("images" + key));
-                return sprite;
+                return img(key);
 
             case AssetTypes.Xml:
 
-                var xmlPath:String = xml("images" + key);
+                var xmlPath:String = xml("images/" + key);
                 trace("Warning: XML path returned, but not used for FlxGraphic creation:", xmlPath);
                 return new FlxSprite(); // or return new FlxGraphic(); depending on your needs
 

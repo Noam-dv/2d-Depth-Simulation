@@ -11,18 +11,29 @@ import shaders.FlxRuntimeShader;
 import shaders.Shaders;
 import flixel.util.FlxSort;
 import entitys.*;
+import flixel.math.FlxPoint;
+import flixel.math.FlxMath;
+import flixel.FlxSprite;
 
 class PlayState extends FlxState
 {
 	public var byte:Byte;
-
+	private var playerFollow:FlxPoint;
 	override public function create()
 	{
 		super.create();
 
+		playerFollow = new FlxPoint();
+
+		var bg = new FlxSprite().loadGraphic(Paths.graphic("placeholders/bgtest1",Image));
+		bg.screenCenter();
+		bg.scale.set(0.65,0.65);
+		add(bg);
+
 		byte = new Byte();
 		add(byte);
 
+		
 		FlxG.camera.bgColor = flixel.util.FlxColor.WHITE;
 	}
 
@@ -30,18 +41,7 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		if (FlxG.mouse.justPressed) {
-            if (FlxG.mouse.x >= byte.x && FlxG.mouse.x <= byte.x + byte.width &&
-                FlxG.mouse.y >= byte.y && FlxG.mouse.y <= byte.y + byte.height) {
-
-                var mouseXDir:Float = FlxG.mouse.x - byte.x;
-                var mouseYDir:Float = FlxG.mouse.y - byte.y;
-
-                var length:Float = Math.sqrt(mouseXDir * mouseXDir + mouseYDir * mouseYDir);
-                mouseXDir /= length;
-                mouseYDir /= length;
-                byte.addForce(-mouseXDir * 5, -mouseYDir * 5);
-            }
-        }
+		playerFollow.set(byte.chest.getGraphicMidpoint().x + byte.camOffset.x, byte.chest.getGraphicMidpoint().y);
+		FlxG.camera.scroll.x = FlxMath.lerp(FlxG.camera.scroll.x, playerFollow.x, elapsed * 7.5);
 	}
 }
