@@ -2,11 +2,13 @@
 	"lineEnds": {
 		"leftCurly": "both",
 		"rightCurly": "both",
-		"objectLiteralCurly": {
+		"objectLiteralCurly": 
+		{
 			"leftCurly": "after"
 		}
 	},
-	"sameLine": {
+	"sameLine": 
+	{
 		"ifElse": "next",
 		"doWhile": "next",
 		"tryBody": "next",
