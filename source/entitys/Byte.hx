@@ -49,6 +49,12 @@ class Byte extends DefaultSpriteGroup<NSprite>
 		accelerationY += fy;
 	}
 
+	public function setForce(fx:Null<Float>, fy:Null<Float>)
+	{
+		accelerationX = fx != null ? fx : accelerationX;
+		accelerationY += fy != null ? fy : accelerationY;
+	}
+
 	var maxHeights:Array<HeightThreshold> = [
 		{xThreshold: -500, xEndThreshold: 580, height: 20},
 		{xThreshold: 580, xEndThreshold: 10000, height: 50}
