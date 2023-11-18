@@ -1,7 +1,8 @@
 package util;
 
-typedef MaxHeightThreshhold =
+typedef HeightThreshold =
 {
 	xThreshold:Int,
+	xEndThreshold:Int,
 	height:Int
 }
