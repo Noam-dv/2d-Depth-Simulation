@@ -30,11 +30,12 @@
 	<!-- _____________________________ Path Settings ____________________________ -->
 
 	<set name="BUILD_DIR" value="export" />
+	<!--source path="src-FX" /> !-->
 	<source path="source" />
 	<assets path="assets" />
 
 	<!-- _______________________________ Libraries ______________________________ -->
-
+	<haxelib name="n-util" />
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 	<haxelib name="flixel-ui" />
