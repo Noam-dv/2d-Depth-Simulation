@@ -14,30 +14,31 @@ import gfx.*;
 import shaders.FlxRuntimeShader;
 import shaders.Shaders;
 import util.*;
+import backend.FloorFile.FloorItems;
 
-class PlayState extends NLevel
-{
-	public var byte:Byte;
+class PlayState extends NLevel {
+    public var byte:Byte;
+    private var playerFollow:FlxPoint;
+    private var loadedRoomSprites:Array<NSprite>;
 
-	private var playerFollow:FlxPoint;
+	public static var instance:PlayState;
 
-	override public function create()
-	{
-		super.create();
+    override public function create() {
+        super.create();
 
-		playerFollow = new FlxPoint();
+		instance = this;
+        playerFollow = new FlxPoint();
+        loadedRoomSprites = []; 
 
-		background = RoomUtil.background("placeholders/bgtest");
-		add(background);
+        var roomId:Int = 1;
+        var floorData:Map<Int, Map<FloorItems, Array<Dynamic>>> = FloorFile.loadFloorFromFile("test"); 
+        loadedRoomSprites = RoomUtil.loadRoomData(roomId, floorData, instance);
 
-		byte = new Byte();
-		add(byte);
+        byte = new Byte();
+        add(byte);
 
-		forground = RoomUtil.forground("placeholders/bgtest");
-		add(forground);
-
-		FlxG.camera.bgColor = flixel.util.FlxColor.WHITE;
-	}
+        FlxG.camera.bgColor = flixel.util.FlxColor.WHITE;
+    }
 
 	override public function update(elapsed:Float)
 	{

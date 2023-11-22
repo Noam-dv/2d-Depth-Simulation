@@ -58,40 +58,46 @@ class Byte extends DefaultSpriteGroup<NSprite>
 	var maxHeights:Array<HeightThreshold> = [
 		{xThreshold: -500, xEndThreshold: 580, height: 20},
 		{xThreshold: 580, xEndThreshold: 10000, height: 50}
-		//thresholds for maximum height
+		// thresholds for maximum height
 	];
-	
+
 	var minHeights:Array<HeightThreshold> = [
 		{xThreshold: -500, xEndThreshold: -160, height: 55},
 		{xThreshold: -160, xEndThreshold: 10000, height: 80}
-		//thresholds for minimum height
+		// thresholds for minimum height
 	];
 
-	public function getMaxHeight():Float {	
-		for (i in 0...maxHeights.length) {
+	public function getMaxHeight():Float
+	{
+		for (i in 0...maxHeights.length)
+		{
 			var startThreshold = maxHeights[i].xThreshold;
 			var endThreshold = maxHeights[i].xEndThreshold;
 			var height = maxHeights[i].height;
-	
-			if (mouth.x > startThreshold && mouth.x < endThreshold) {
-				return height; 
-			}
-		}
-	
-		return 40;
-	}
-	
-	public function getMinHeight():Float {
-		for (i in 0...minHeights.length) {
-			var startThreshold = minHeights[i].xThreshold;
-			var endThreshold = minHeights[i].xEndThreshold;
-			var height = minHeights[i].height;
-	
-			if (mouth.x > startThreshold && mouth.x < endThreshold) {
+
+			if (mouth.x > startThreshold && mouth.x < endThreshold)
+			{
 				return height;
 			}
 		}
-	
+
+		return 40;
+	}
+
+	public function getMinHeight():Float
+	{
+		for (i in 0...minHeights.length)
+		{
+			var startThreshold = minHeights[i].xThreshold;
+			var endThreshold = minHeights[i].xEndThreshold;
+			var height = minHeights[i].height;
+
+			if (mouth.x > startThreshold && mouth.x < endThreshold)
+			{
+				return height;
+			}
+		}
+
 		return 10;
 	}
 
@@ -226,7 +232,7 @@ class Byte extends DefaultSpriteGroup<NSprite>
 
 		trace(getMinHeight());
 		if (curRoomHeight > getMinHeight())
-			curRoomHeight = getMinHeight();	
+			curRoomHeight = getMinHeight();
 		if (curRoomHeight < -getMaxHeight())
 			curRoomHeight = -getMaxHeight();
 

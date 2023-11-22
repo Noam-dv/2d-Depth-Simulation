@@ -6,10 +6,19 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import backend.*;
+import backend.FloorFile.*;
 
 class Paths {
     public static var __default__:String = "assets/default.png";
 
+    public static function data(key:String, T:AssetTypes = Json_File):Any {
+        switch (T) {
+            case AssetTypes.Json_File:
+
+                trace(dataPath(key,"json");
+                return dataPath(key,"json");
+        }
+    }
 // Paths.hx
     public static function graphic(key:String, T:AssetTypes = Image):Any {
         switch (T) {
@@ -39,5 +48,8 @@ class Paths {
     
     public static function xml(key:String):Any {
         return 'assets/' + key + ".xml";
+    }
+    public static function dataPath(key:String, ext:String):String {
+        return 'assets/data/' + key + "/" + ext;
     }
 }

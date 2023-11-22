@@ -1,6 +1,6 @@
 package backend;
-import nutil.NutilExtern;
+import nutil.util.NutilExtern;
 
-class PhysUtil extends NutilExtern {
+class PhysUtil implements NutilExtern {
     
 }
