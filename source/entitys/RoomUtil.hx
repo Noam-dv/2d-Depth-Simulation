@@ -27,14 +27,12 @@ class RoomUtil
                 for (bgData in bgList) {
                     var bg:NSprite = background("placeholders/bgtest");
                     loadedSprites.push(bg);
-                    bg.x = bgData.x;
-                    bg.y = bgData.y;
+                    bg.screenCenter();
                     playState.addSpr(bg);
 
                     var fg:NSprite = forground("placeholders/bgtest");
                     loadedSprites.push(fg);
-                    fg.x = bgData.x;
-                    fg.y = bgData.y;
+                    fg.screenCenter();
                     playState.addInfront(fg);
                 }
             }

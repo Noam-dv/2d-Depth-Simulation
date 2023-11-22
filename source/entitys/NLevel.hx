@@ -18,4 +18,7 @@ class NLevel extends FlxState
 	{
 		fgSprites.push(spr);
 	}
+	public function addFG(){
+		for(i in fgSprites) add(i);
+	}
 }
