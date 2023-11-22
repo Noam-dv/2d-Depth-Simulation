@@ -39,7 +39,7 @@ class PlayState extends NLevel {
         byte = new Byte();
         add(byte);
 
-        addFG();
+        this.addFG();
 
         FlxG.camera.bgColor = flixel.util.FlxColor.WHITE;
     }
