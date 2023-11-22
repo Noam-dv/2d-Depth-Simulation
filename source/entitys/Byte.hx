@@ -230,7 +230,7 @@ class Byte extends DefaultSpriteGroup<NSprite>
 			byte.y = FlxMath.lerp(byte.y, base_height + curRoomHeight, elapsed * 9.5);
 		});
 
-		trace(getMinHeight());
+		//trace(getMinHeight());
 		if (curRoomHeight > getMinHeight())
 			curRoomHeight = getMinHeight();
 		if (curRoomHeight < -getMaxHeight())
