@@ -17,6 +17,7 @@ class Paths {
 
                 trace(dataPath(key,"json"));
                 return dataPath(key,"json");
+            default:  return dataPath(key,"xml");
         }
         return dataPath(key,"json");
     }
@@ -51,6 +52,6 @@ class Paths {
         return 'assets/' + key + ".xml";
     }
     public static function dataPath(key:String, ext:String):String {
-        return 'assets/data/' + key + "/" + ext;
+        return 'assets/data/' + key + "." + ext;
     }
 }
