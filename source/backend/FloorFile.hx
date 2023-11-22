@@ -29,6 +29,7 @@ class FloorFile
 			var roomData:Map<FloorItems, Array<Dynamic>> = new Map<FloorItems, Array<Dynamic>>();
 			roomData.set(FloorItems.ENEMY, roomEnemies);
 			roomData.set(FloorItems.ITEM, roomItems);
+
 			floorData.set(roomId, roomData);
 		}
 

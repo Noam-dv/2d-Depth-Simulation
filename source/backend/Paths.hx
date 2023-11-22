@@ -15,9 +15,10 @@ class Paths {
         switch (T) {
             case AssetTypes.Json_File:
 
-                trace(dataPath(key,"json");
+                trace(dataPath(key,"json"));
                 return dataPath(key,"json");
         }
+        return dataPath(key,"json");
     }
 // Paths.hx
     public static function graphic(key:String, T:AssetTypes = Image):Any {
