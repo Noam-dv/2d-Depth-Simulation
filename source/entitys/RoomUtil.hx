@@ -29,7 +29,7 @@ class RoomUtil
                     loadedSprites.push(bg);
                     bg.screenCenter();
                     playState.addSpr(bg);
-
+                    
                     var fg:NSprite = forground("placeholders/bgtest");
                     loadedSprites.push(fg);
                     fg.screenCenter();

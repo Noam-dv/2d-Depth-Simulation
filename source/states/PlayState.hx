@@ -34,6 +34,8 @@ class PlayState extends NLevel {
         var floorData:Map<Int, Map<FloorItems, Array<Dynamic>>> = FloorFile.loadFloorFromFile("test"); 
         loadedRoomSprites = RoomUtil.loadRoomData(roomId, floorData, instance);
 
+        for(_s in loadedRoomSprites) add(_s);
+        
         byte = new Byte();
         add(byte);
 
