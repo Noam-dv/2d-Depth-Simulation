@@ -16,44 +16,40 @@ class FloorFile {
 			//1, ["enemy"=>[0,0], "item"=>[0,0]]; room index, map of entitys
 		];
 
-        var parsedData:FloorJSON = Json.parse(File.getContent(Paths.data(content, Json_File)));
+        var parsedData:FloorJSON = Json.parse(File.getContent(Paths.data(filePath, Json_File)));
 
         if (parsedData != null && parsedData.rooms != null) {
             for (room in parsedData.rooms) {
                 var roomData:RoomData = new RoomData(room.id);
+                if (room.enemies != null) roomData.enemies = _parse(room.enemies,"enemies");
+                if (room.items != null) roomData.items = _parse(room.items,"items");
 
-                if (room.enemies != null)
-                    roomData.enemies = parseEnemies(room.enemies);
-                if (room.items != null)
-                    roomData.items = parseItems(room.items);
-
-                floorData.set(roomData.id, roomDataToMap(roomData));
+				var ENTITYS:Map<FloorItems, Array<Dynamic>> = [];
+				ENTITYS.set(FloorItems.ENEMY, roomData.enemies);
+				ENTITYS.set(FloorItems.ITEM, roomData.items);
+				
+                floorData.set(roomData.id, ENTITYS);
             }
         }
 
         return floorData;
     }
 
-    private static function parseEnemies(data:Array<Dynamic>):Array<EnemyData> {
-        var enemies:Array<EnemyData> = [];
-        for (enemy in data) {
-            enemies.push(new EnemyData(enemy.type, enemy.x, enemy.y));
-        }
-        return enemies;
-    }
-
-    private static function parseItems(data:Array<Dynamic>):Array<ItemData> {
-        var items:Array<ItemData> = [];
-        for (item in data) {
-            items.push(new ItemData(item.type, item.x, item.y));
-        }
-        return items;
-    }
-
-    private static function roomDataToMap(roomData:RoomData):Map<FloorItems, Array<Dynamic>> {
-        var map:Map<FloorItems, Array<Dynamic>> = [];
-        map.set(FloorItems.ENEMY, roomData.enemies);
-        map.set(FloorItems.ITEM, roomData.items);
-        return map;
+    private static function _parse(data:Array<Dynamic>, T:String):Array<Dynamic> {
+		switch(T.toLowerCase()){
+			case "enemies"
+				var enemies:Array<EnemyData> = [];
+				for (enemy in data) {
+					enemies.push(new EnemyData(enemy.type, enemy.x, enemy.y));
+				}
+				return enemies;
+			case "items":
+				var items:Array<ItemData> = [];
+				for (item in data) {
+					items.push(new ItemData(item.type, item.x, item.y));
+				}
+				return items;
+		}
+		return null; // uh oh.h,.,.,.,.,.,
     }
 }
