@@ -17,7 +17,7 @@ class FloorFile {
 		];
 
         var content:String = File.getContent(filePath);
-        var parsedData:FloorJSON = Json.parse(Path.data(content, Json_File));
+        var parsedData:FloorJSON = Json.parse(Paths.data(content, Json_File));
 
         if (parsedData != null && parsedData.rooms != null) {
             for (room in parsedData.rooms) {
