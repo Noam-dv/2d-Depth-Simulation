@@ -5,65 +5,56 @@ import haxe.Json;
 import sys.FileSystem;
 import sys.io.File;
 
-enum FloorItems
-{
-	ROOM;
-	ENEMY;
-	ITEM;
+enum FloorItems {
+    ROOM;
+    ENEMY;
+    ITEM;
 }
+class FloorFile {
+    public static function load(filePath:String):Map<Int, Map<FloorItems, Array<Dynamic>>> {
+        var floorData:Map<Int, Map<FloorItems, Array<Dynamic>>> = [
+			//1, ["enemy"=>[0,0], "item"=>[0,0]]; room index, map of entitys
+		];
 
-class FloorFile
-{
-	public static function loadFloorFromFile(filePath:String):Map<Int, Map<FloorItems, Array<Dynamic>>>
-	{
-		var floorData:Map<Int, Map<FloorItems, Array<Dynamic>>> = new Map<Int, Map<FloorItems, Array<Dynamic>>>();
+        var content:String = File.getContent(filePath);
+        var parsedData:FloorJSON = Json.parse(Path.data(content, Json_File));
 
-		var fileContent:String = File.getContent(filePath);
-		var parsedDynamic:Dynamic = Json.parse(fileContent);
+        if (parsedData != null && parsedData.rooms != null) {
+            for (room in parsedData.rooms) {
+                var roomData:RoomData = new RoomData(room.id);
 
-		if (parsedDynamic != null && Reflect.hasField(parsedDynamic, "rooms"))
-		{
-			for (room in Reflect.field(parsedDynamic, "rooms"))
-			{
-				var roomData:RoomData = parseRoomData(room);
+                if (room.enemies != null)
+                    roomData.enemies = parseEnemies(room.enemies);
+                if (room.items != null)
+                    roomData.items = parseItems(room.items);
 
-				var enemyData:Array<Dynamic> = Reflect.field(room, "enemies");
-				var itemData:Array<Dynamic> = Reflect.field(room, "items");
+                floorData.set(roomData.id, roomDataToMap(roomData));
+            }
+        }
 
-				if (enemyData != null)
-					roomData.enemies = parseEnemyOrItemData(enemyData, EnemyData);
-				if (itemData != null)
-					roomData.items = parseEnemyOrItemData(itemData, ItemData);
+        return floorData;
+    }
 
-				floorData.set(roomData.id, roomDataToMap(roomData));
-			}
-		}
+    private static function parseEnemies(data:Array<Dynamic>):Array<EnemyData> {
+        var enemies:Array<EnemyData> = [];
+        for (enemy in data) {
+            enemies.push(new EnemyData(enemy.type, enemy.x, enemy.y));
+        }
+        return enemies;
+    }
 
-		return floorData;
-	}
+    private static function parseItems(data:Array<Dynamic>):Array<ItemData> {
+        var items:Array<ItemData> = [];
+        for (item in data) {
+            items.push(new ItemData(item.type, item.x, item.y));
+        }
+        return items;
+    }
 
-	private static function parseRoomData(room:Dynamic):RoomData
-	{
-		var roomData:RoomData = new RoomData(room.id);
-		return roomData;
-	}
-
-	private static function parseEnemyOrItemData(data:Array<Dynamic>, DataType:Class<Dynamic>):Array<Dynamic>
-	{
-		var dataArray:Array<Dynamic> = [];
-		for (item in data)
-		{
-			var parsedData:Dynamic = cast(item, DataType);
-			dataArray.push(parsedData);
-		}
-		return dataArray;
-	}
-
-	private static function roomDataToMap(roomData:RoomData):Map<FloorItems, Array<Dynamic>>
-	{
-		var map:Map<FloorItems, Array<Dynamic>> = new Map<FloorItems, Array<Dynamic>>();
-		map.set(FloorItems.ENEMY, roomData.enemies);
-		map.set(FloorItems.ITEM, roomData.items);
-		return map;
-	}
+    private static function roomDataToMap(roomData:RoomData):Map<FloorItems, Array<Dynamic>> {
+        var map:Map<FloorItems, Array<Dynamic>> = [];
+        map.set(FloorItems.ENEMY, roomData.enemies);
+        map.set(FloorItems.ITEM, roomData.items);
+        return map;
+    }
 }
