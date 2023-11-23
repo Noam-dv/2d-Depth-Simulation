@@ -2,7 +2,7 @@
 ## Overview
 
 This is a project im just publishing the source with no assets (via .gitignore) bc the game isnt out yet
-![Game Screenshot](imgs/tboi-repentance.gif)
+![Game Screenshot](imgs/g.gif)
 
 ## License
 
