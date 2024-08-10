@@ -1,7 +1,7 @@
 
 ## Overview
 
-This is a project im just publishing the source with no assets (via .gitignore) bc the game isnt out yet
+This is a project im just publishing the source with no assets
 ![Game Screenshot](imgs/g.gif)
 
 ## License
